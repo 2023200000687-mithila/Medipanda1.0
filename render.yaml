@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: medipanda
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/site
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEMO_SEED_ENABLED
+        value: "false"
+      - key: DEMO_SEED_RESET_PASSWORDS
+        value: "false"
+      - key: OTP_DEV_CONSOLE
+        value: "false"
+      - key: BREVO_ENABLED
+        value: "true"
+      - key: SMS_ENABLED
+        value: "true"
+      - key: SMS_PROVIDER
+        value: brevo
+      - key: SSLCOMMERZ_SANDBOX
+        value: "true"
+      # Fill these in the Render dashboard (sync: false = not stored in git)
+      - key: MONGODB_URI
+        sync: false
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: SEED_ADMIN_EMAIL
+        sync: false
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: SSLCOMMERZ_STORE_ID
+        sync: false
+      - key: SSLCOMMERZ_STORE_PASSWORD
+        sync: false
+      - key: FCM_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: FIREBASE_WEB_CONFIG_JSON
+        sync: false
+      - key: FIREBASE_VAPID_KEY
+        sync: false

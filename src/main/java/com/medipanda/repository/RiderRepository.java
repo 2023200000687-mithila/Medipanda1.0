@@ -1,0 +1,1 @@
+package com.medipanda.repository; import com.medipanda.model.Rider; import org.springframework.data.mongodb.repository.MongoRepository; import java.util.*; public interface RiderRepository extends MongoRepository<Rider,String>{ List<Rider> findByStatus(String status); Optional<Rider> findByUserId(String userId); }

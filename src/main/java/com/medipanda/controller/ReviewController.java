@@ -1,0 +1,11 @@
+package com.medipanda.controller;
+import com.medipanda.model.*; import com.medipanda.repository.*; import org.springframework.http.HttpStatus; import org.springframework.web.bind.annotation.*; import org.springframework.web.server.ResponseStatusException; import java.security.Principal; import java.util.*;
+@RestController @RequestMapping("/api/reviews")
+public class ReviewController {
+ private final ReviewRepository reviews; private final OrderRepository orders; private final UserRepository users; private final PharmacyRepository pharmacies; private final RiderRepository riders;
+ public ReviewController(ReviewRepository r,OrderRepository o,UserRepository u,PharmacyRepository p,RiderRepository rd){reviews=r;orders=o;users=u;pharmacies=p;riders=rd;}
+ @GetMapping("/pharmacy/{id}") public List<Review> pharmacy(@PathVariable String id){return reviews.findByPharmacyIdOrderByCreatedAtDesc(id);}
+ @PostMapping public Review create(@RequestBody Review req,Principal p){User u=users.findByEmailIgnoreCaseOrPhone(p.getName(),p.getName()).orElseThrow();if(!"CUSTOMER".equals(u.getRole()))throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Customers only");Order o=orders.findById(req.getOrderId()).orElseThrow();if(!u.getId().equals(findCustomerId(o,u)))throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not your order");if(!"DELIVERED".equals(o.getStatus()))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Review after delivery only");if(reviews.findByOrderIdAndCustomerId(o.getId(),u.getId()).isPresent())throw new ResponseStatusException(HttpStatus.CONFLICT,"Review already submitted");
+  int pr=Math.max(1,Math.min(5,req.getPharmacyRating())), rr=Math.max(1,Math.min(5,req.getRiderRating())); Review r=Review.builder().orderId(o.getId()).customerId(u.getId()).customerName(u.getName()).pharmacyId(o.getPharmacyId()).riderId(o.getRiderId()).pharmacyRating(pr).riderRating(rr).comment(req.getComment()==null?"":req.getComment().trim()).createdAt(new Date()).build(); return reviews.save(r); }
+ private String findCustomerId(Order o,User u){return u.getEmail()!=null&&u.getEmail().equalsIgnoreCase(o.getCustomerEmail())?u.getId():u.getPhone()!=null&&u.getPhone().equals(o.getCustomerEmail())?u.getId():null;}
+}

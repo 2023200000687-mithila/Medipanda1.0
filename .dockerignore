@@ -1,0 +1,11 @@
+target/
+.idea/
+*.iml
+.git/
+.gitignore
+.env
+.env.*
+secrets/
+src/main/resources/application-local.properties
+*.md
+docker-compose.yml

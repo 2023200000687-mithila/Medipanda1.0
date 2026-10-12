@@ -1,0 +1,23 @@
+# Run:  cp .env.production.example .env  (fill values)  ->  docker compose up -d --build
+# Uses your MongoDB Atlas MONGODB_URI. For a self-hosted DB add:  docker compose --profile localdb up -d
+services:
+  app:
+    build: .
+    container_name: medipanda
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${PORT:-8081}:${PORT:-8081}"
+    volumes:
+      # optional: Firebase service-account JSON: put firebase.json in ./secrets and set FCM_SERVICE_ACCOUNT_FILE=/run/secrets/firebase.json
+      - ./secrets:/run/secrets:ro
+
+  mongo:
+    image: mongo:7
+    profiles: ["localdb"]
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

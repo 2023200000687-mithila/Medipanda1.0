@@ -1,0 +1,4 @@
+package com.medipanda.model;
+import lombok.*; import org.springframework.data.annotation.Id; import org.springframework.data.mongodb.core.mapping.Document; import java.util.*;
+@Data @Builder @NoArgsConstructor @AllArgsConstructor @Document("orders")
+public class Order { @Id private String id; private String customerName, customerEmail, pharmacyId, riderId, deliveryAddress, status; private double total, deliveryFee; private List<String> items = new ArrayList<>(); private List<String> rejectedRiderIds = new ArrayList<>(); private Date createdAt; private Date riderRequestAt; private double customerLatitude, customerLongitude; private String paymentMethod, paymentStatus, prescriptionDocument; private double distanceKm; private int estimatedDeliveryMinutes; private List<OrderMessage> messages = new ArrayList<>(); }
